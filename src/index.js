@@ -9,13 +9,14 @@ const DB = [];
 
 function accountIfExist(request, response, next) {
     const { cpf } = request.headers
-    const accountExist = DB.find((accountExist) => { return accountExist.cpf === cpf })
-
+   
+    const accountExist = DB.find((account)=>{return account.cpf == cpf})
+    
+    
 
     if (!accountExist) {
         return response.json({ 'Error': 'Error' })
     }
-
 
 
     request.accountExist = accountExist
@@ -80,7 +81,7 @@ app.post('/account', accountNotExist, (request, response) => {
 app.get('/only', accountIfExist, (request, response) => {
 
     const { accountExist } = request;
-
+   
     return response.json(accountExist)
 
 
