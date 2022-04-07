@@ -1,3 +1,4 @@
+const { query } = require('express');
 const express = require('express')
 const app = express()
 
@@ -9,10 +10,10 @@ const DB = [];
 
 function accountIfExist(request, response, next) {
     const { cpf } = request.headers
-   
-    const accountExist = DB.find((account)=>{return account.cpf == cpf})
-    
-    
+
+    const accountExist = DB.find((account) => { return account.cpf == cpf })
+
+
 
     if (!accountExist) {
         return response.json({ 'Error': 'Error' })
@@ -81,7 +82,7 @@ app.post('/account', accountNotExist, (request, response) => {
 app.get('/only', accountIfExist, (request, response) => {
 
     const { accountExist } = request;
-   
+
     return response.json(accountExist)
 
 
@@ -138,6 +139,20 @@ app.post('/sai', accountIfExist, (request, response) => {
 
 
 app.get('/query', (request, response) => response.json(DB))
+
+app.get('/query/date', accountIfExist, (request, response) => {
+    const { accountExist } = request;
+    const { date } = request.query;
+
+    const formatDate = new Date(date + " 00:00");
+    const acc = accountExist.statement.filter((account) => {
+        return account.Datetime.toDateString() === new Date(formatDate).toDateString();
+    })
+
+    return response.json(acc);
+
+
+})
 
 
 
